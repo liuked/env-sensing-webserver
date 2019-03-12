@@ -1,0 +1,98 @@
+import logging
+import pymysql
+import datetime
+
+
+_GOODBYE_MESSAGE = u'Goodbye'
+
+
+logging.basicConfig(filename='pms_wsh.log',level=logging.DEBUG)
+
+class EnvDataLiving():
+
+    def __init__(self, (datetime, pm1, pm2_5, pm10,\
+                        pm1_atm, pm2_5_atm, pm10_atm, \
+                        count0_1, count0_3, count1, count2_5, count5, count10, \
+                        temp, humi)):
+        self.datetime = datetime
+        self.pm1=pm1 
+        self.pm2_5=pm2_5 
+        self.pm10=pm10
+                         
+        self.pm1_atm=pm1_atm
+        self.pm2_5_atm=pm2_5_atm
+        self.pm10_atm=pm10_atm
+                         
+        self.count0_1=count0_1  
+        self.count0_3=count0_3
+        self.count1=count1
+        self.count2_5=count2_5 
+        self.count5=count5
+        self.count10=count10
+                         
+        self.temp=temp
+        self.humi=humi
+
+    def __repr__(self):
+        print ("{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}".format(\
+                self.datetime.strftime("%Y-%m-%d %H:%M:%S"),\
+                self.pm1,      \
+                self.pm2_5,    \
+                self.pm10,     \       
+                self.pm1_atm,  \
+                self.pm2_5_atm,\
+                self.pm10_atm, \             
+                self.count0_1, \
+                self.count0_3, \
+                self.count1,   \
+                self.count2_5, \
+                self.count5,   \
+                self.count10,  \       
+                self.temp,     \
+                self.humi))
+
+
+
+def web_socket_do_extra_handshake(request):
+    # This example handler accepts any request. See origin_check_wsh.py for how
+    # to reject access from untrusted scripts based on origin value.
+    logging.info("Incoming connection from {}".format(srt(request)))
+    pass  # Always accept.
+
+
+def web_socket_transfer_data(request):
+    while True:
+        db = pymysql.connect('localhost', 'webpage', 'webpage', 'env_data')
+        cursor = db.cursor()
+        sql = "SELECT * FROM living \
+               ORDER BY datetime DESC \
+               LIMIT 5;"
+
+        try: 
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            i=0
+            for row in result:
+                sample[i] = EnvDataLiving(row)
+                i=i+1
+                print(sample[i])
+        sleep (5)
+        # line = request.ws_stream.receive_message()
+        # logging.info("Receiving data from {}".format(request))
+        # if line is None:
+        #     return
+        # if isinstance(line, unicode):
+        #     request.ws_stream.send_message(line, binary=False)
+        #     if line == _GOODBYE_MESSAGE:
+        #         return
+        # else:
+        #     request.ws_stream.send_message(line, binary=True)
+
+
+def web_socket_passive_closing_handshake(request):
+    pass
+
+
+
+if __name__ == '__main__':
+    web_socket_transfer_data(None)

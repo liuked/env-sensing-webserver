@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+
+	<script src="./js/modernizr-2.0.6.js"></script>
+	<script src="./js/particles.js"></script>
+	<!-- <script src="./js/server_msg_handler.js"></script> -->
+
+	<link rel="stylesheet" type="text/css" href="./css/pmdisplay.css">
+
+	<title>Apt6 - House Dashboard</title>
+
+</head>
+
+<body onload="init()">
+	<div>
+		<div class="part_container" >
+			<div class="pm1"><h5>PM 1</h5><h2 id=disppm1></h2></div>
+			<div class="pm25"><h5>PM 2.5</h5><h2 id=disppm25></h2></div>
+			<div class="pm10"><h5>PM 10</h5><h2 id=disppm10></h2></div>
+
+			<canvas id="canvasOne" width="900" height="540">
+			Your browser does not support HTML5 canvas.
+			</canvas>
+
+		    <!--<p>HTML5 Canvas - Projecting 3D particles to a 2D canvas. &nbsp; &nbsp;<a href="http://www.rectangleworld.com">rectangleworld.com</a></p>
+		    -->
+		</div>
+	</div>
+
+
+	<div id="connect_div">
+	  <form action="#" onsubmit="connect(); return false;">
+	    url <input type="text" id="address" size="40">
+	    <input type="submit" value="connect">
+	  </form>
+	</div>
+
+	<div id="send_div">
+	  <form action="#" onsubmit="send(); return false;">
+	    data <input type="text" id="message" size="40">
+	    <input type="submit" value="send">
+	  </form>
+	</div>
+
+
+	<div id="log_div">
+		<textarea style="resize: both;" id="log" rows="10" cols="100" readonly></textarea>
+		<br/>
+	</div>
+
+
+	<div id="close_div">
+		<form action="#" onsubmit="closeSocket(); return false;">
+			code <input type="text" id="code" size="10">
+			reason <input type="text" id="reason" size="20">
+			<input type="submit" value="close">
+		</form>
+	</div>
+
+	
+	<div id="printstate_div">
+		<input type="button" value="print state" onclick="printState();">
+	</div>
+
+</body>
+</html>
